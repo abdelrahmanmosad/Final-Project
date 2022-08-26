@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
 import { AiOutlineHeart } from 'react-icons/ai';
 import { getProducts } from '../../firebase/products';
-import { Card } from '../../components/card/card';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useUserContext } from './../../context/userContext';
 import { db } from '../../firebase';
@@ -25,7 +24,7 @@ const Men = () => {
         }
         prdlist();
     }, [])
-    console.log(products)
+    // console.log(products)
 
     // add favorite product
 
@@ -34,14 +33,13 @@ const Men = () => {
     const f = useSelector((state) => { return state.fav.favProducts })
     const [favMenu, setfavMenu] = useState(f);
 
-    const addFavorite = async (productid, productname, productprice) => {
-        let favProduct = { id: productid, name: productname, price: productprice };
+    const addFavorite = async (productid, productname, productprice, productimg) => {
+        let favProduct = { id: productid, name: productname, price: productprice, img: productimg };
         if (users) {
+            console.log("done");
+            console.log(userInfo.uid);
             if (favMenu.some(fav => fav.id == favProduct.id)) {
-
                 setfavMenu(favMenu.filter(f => f.name != favProduct.name))
-
-
             }
             else {
                 setfavMenu(favMenu.concat(favProduct))
@@ -92,7 +90,7 @@ const Men = () => {
                                                 <a class="card-action" >
                                                     <button className=
                                                         {`btn btn-warning${favMenu.some(i => i.id == prd.id) ? 'btn btn-danger' : 'btn btn-warning'}`}
-                                                        onClick={() => addFavorite(prd.id, prd.name, prd.price)}><AiOutlineHeart style={{ width: "25px", height: "30px" }} />
+                                                        onClick={() => addFavorite(prd.id, prd.name, prd.price, prd.imageURL)}><AiOutlineHeart style={{ width: "25px", height: "30px" }} />
                                                     </button></a>
                                                 <div class="card-heading">
                                                     {prd.name}

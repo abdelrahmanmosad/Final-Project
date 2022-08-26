@@ -56,9 +56,9 @@ export const UserContextProvider = ({ children }) => {
          .then((credentials) => {
             console.log(credentials);
             console.log(auth.currentUser.uid);
-            const user = credentials.user
+
             const data = {
-               uid: user.uid,
+               uid: credentials.user.uid,
                Name: name,
                Email: email,
                Password: password,
@@ -66,13 +66,14 @@ export const UserContextProvider = ({ children }) => {
                Favs: [],
                mobile: "",
             }
-            addDocByID('Users', user.uid, data)
-               .then(async () => {
+            addDocByID('Users', credentials.user.uid, data)
+               .then(async (res) => {
                   await updateProfile(auth.currentUser, {
                      ...users,
                      displayName: name,
                      phoneNumber: '02',
                   });
+                  setUserInfo(res.data());
                   navigate('/home');
                }).catch(error => setError(error.message))
                .finally(() => setLoading(false));
@@ -82,10 +83,7 @@ export const UserContextProvider = ({ children }) => {
    };
 
    const signInUser = async (email, password) => {
-
       setLoading(true);
-
-
       await signInWithEmailAndPassword(auth, email, password)
          .then(async (res) => {
             console.log(res.user);
@@ -147,6 +145,7 @@ export const UserContextProvider = ({ children }) => {
          await reauthenticateWithCredential(user, cred)
          await updatePassword(auth.currentUser, newPass).then(async () => {
             console.log(user);
+            alert("Password Updated");
             await setDoc(doc(db, "Users", auth.currentUser.uid), {
                Password: newPass,
             }, { merge: true });
@@ -181,6 +180,7 @@ export const UserContextProvider = ({ children }) => {
       errors,
       UserContext,
       userInfo,
+      setUserInfo,
       setUsers,
       signInUser,
       registerUser,

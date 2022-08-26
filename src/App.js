@@ -1,6 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { UserContextProvider } from './context/userContext';
+import { UserContextProvider, useUserContext } from './context/userContext';
 import Home from './components/home/home';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
@@ -18,13 +18,14 @@ import WomenDetails from './pages/women/womenDetails';
 import Kids from './pages/kids/kids';
 import KidsDetails from './pages/kids/kidsDetails';
 import Myaccount from './pages/My Account/myaccount';
-
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from './firebase';
 
 
 function App() {
-
   return (
     <>
+
       <Router>
         <UserContextProvider>
           <Header />
